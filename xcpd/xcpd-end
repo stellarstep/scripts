@@ -18,8 +18,10 @@ echo "============ NOW DEPLOY TO ORIGIN : Build $BUILD_NUM ============"
 # push to origin
 git add -u
 git commit -m "[Build $BUILD_NUM - Beta]"
+$(git tag beta/b"$BUILD_NUM")
 git push -f origin develop:release-beta
 git push origin develop
+$(git push origin beta/b"$BUILD_NUM")
 
 # undo stash
 STASHED_ID=$(get_tmp_stash_id)
