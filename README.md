@@ -55,6 +55,10 @@ A variety of resource file reprocessors that optimized for working with xcode. P
 ###### appv
 - rescale mp4 video files via provided sizes. (especially, it is helpful when needed to force the correct size in pixels.)
 - using ffmpeg.
+- example to use (upscaling to 1080x1920)
+```
+$ appv preview_video_750x1334.mp4 preview_video_1080x1920.mp4 1080 1920
+```
 
 ### shs
 
