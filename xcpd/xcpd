@@ -33,7 +33,7 @@ echo "============ CLEANED. NOW START... ============"
 
 
 if [ "$1" == "--exclude-new-buildnum" ]; then
-	BUILD_NUM=$(agvtool what-version | tail -2 | awk '{ print $1, $2 }')
+	BUILD_NUM=$(agvtool what-version | tail -2 | xargs echo)
 	read  -rd '' BUILD_NUM <<< "$BUILD_NUM"
 else
 	BUILD_NUM=$(agvtool next-version -all | tail -3 | awk 'NF{print $NF; exit}')
