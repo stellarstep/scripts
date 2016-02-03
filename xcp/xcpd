@@ -1,36 +1,28 @@
+#!/bin/bash
 
 function check_complict {
 	if $(git status --porcelain | grep UU); then
 	    echo Repo was Confilcted.; exit 1
 	fi
 }
-
 function check_clean {
 	if [ -n "$(git ls-files --others --exclude-standard)" ]; then
 		echo Repo was NOT Cleaned.; exit 1
 	fi
 }
-
 STASH_ID="stash_id_tmp"
 function get_tmp_stash_id {
 	echo "$(git stash list | grep $STASH_ID | awk -F':' '{print $1}' | head -1)"
 }
-
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 
 
 check_complict
-
 git stash save -u $STASH_ID
-
 check_clean
-
-git pull
-
+git pull origin $CURRENT_BRANCH
 check_complict
-
-echo "============ CLEANED. NOW START... ============"
-
-
+echo "============ CLEANED. NOW START TASK... ============"
 
 if [ "$1" == "--exclude-new-buildnum" ]; then
 	BUILD_NUM=$(agvtool what-version | tail -2 | xargs echo)
@@ -46,8 +38,6 @@ fi
 
 echo "============ NOW DEPLOY TO ORIGIN : Build $BUILD_NUM ============"
 
-CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-
 # push to origin
 git add -u
 git commit -m "[Build $BUILD_NUM - Beta]"
@@ -55,7 +45,6 @@ $(git tag beta/b"$BUILD_NUM")
 git push -f origin "$CURRENT_BRANCH":release-beta
 git push origin $CURRENT_BRANCH
 $(git push origin beta/b"$BUILD_NUM")
-
 # undo stash
 STASHED_ID=$(get_tmp_stash_id)
 if [ -n "$STASHED_ID" ]; then
@@ -63,3 +52,4 @@ if [ -n "$STASHED_ID" ]; then
 		echo "Restored working directory and index state succesfully."
 	fi
 fi
+echo "============ DONE. ============"

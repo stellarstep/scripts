@@ -1,5 +1,6 @@
 #!/bin/bash
-source $(dirname $0)/xcpd-shared
+source $(dirname $0)/xcp-shared
+source $(dirname $0)/xcp-begin
 
 if [ "$1" == "--exclude-new-buildnum" ]; then
 	BUILD_NUM=$(agvtool what-version | tail -2 | xargs echo)
@@ -15,8 +16,6 @@ fi
 
 echo "============ NOW DEPLOY TO ORIGIN : Build $BUILD_NUM ============"
 
-CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-
 # push to origin
 git add -u
 git commit -m "[Build $BUILD_NUM - Beta]"
@@ -25,10 +24,4 @@ git push -f origin "$CURRENT_BRANCH":release-beta
 git push origin $CURRENT_BRANCH
 $(git push origin beta/b"$BUILD_NUM")
 
-# undo stash
-STASHED_ID=$(get_tmp_stash_id)
-if [ -n "$STASHED_ID" ]; then
-	if [ -n "$(git stash pop "$STASHED_ID" --index | egrep "Dropped $STASHED_ID")" ]; then
-		echo "Restored working directory and index state succesfully."
-	fi
-fi
+source $(dirname $0)/xcp-end

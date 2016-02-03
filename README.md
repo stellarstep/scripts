@@ -1,24 +1,26 @@
 # scripts
 Several small scripts and workflows(for mac os automation).
 
-### xcpd
-- v0.0.1
+### xcp
+- v1.0
 
-A git script for deploying Xcode project.<br/>
-Automatically increment build number and push to specific branch without currently working content.<br/>
+The most simplest, safe, and config zero git pipelines, xcp lets you manage version of your Xcode project without currently working content.<br/>
 Safe from conflict or loss.
 
+### xcpd
+- Push to branch 'release-beta' with automatically increment build number, and create tag.(b/{buildNumber})
 ```
 ~/YOUR_PROJECT$ xcpd
 ```
 
-Squash merge, and push version of release onto master branch from specific tag.
+### xcpa
+
+- Squash merge, and push version of release onto master branch from specific tag.
 ```
 ~/YOUR_PROJECT$ xcpda {tag name of release version}
 
 ex) ~/YOUR_PROJECT$ xcpda 1.0
 ```
-
 
 If throw any error, simply just do below.
 ```
