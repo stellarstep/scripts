@@ -12,6 +12,14 @@ Safe from conflict or loss.
 ~/YOUR_PROJECT$ xcpd
 ```
 
+Squash merge, and push version of release onto master branch from specific tag.
+```
+~/YOUR_PROJECT$ xcpda {tag name of release version}
+
+ex) ~/YOUR_PROJECT$ xcpda 1.0
+```
+
+
 If throw any error, simply just do below.
 ```
 ~/YOUR_PROJECT$ git stash pop
