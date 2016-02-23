@@ -1,6 +1,8 @@
 #!/usr/bin/python
 '''
 [example : metadata.yml]
+Base:
+	support_url: http://support.url.com
 en-US:
 	metadata_dir_app1:
 			name: App Name
@@ -8,11 +10,15 @@ en-US:
 ja:
 	metadata_dir_app1:
 			name: Japanese App Name
-   marketing_url: http://url.com
+   marketing_url: http://ja.url.com
 
 [result]
-fastlane/metadata_dir_app1/name.txt <- 'App Name'
-fastlane/metadata_dir_app1/marketing_url.txt <- 'http://url.com'
+fastlane/metadata_dir_app1/en-US/name.txt <- 'App Name'
+fastlane/metadata_dir_app1/en-US/marketing_url.txt <- 'http://url.com'
+fastlane/metadata_dir_app1/en-US/support_url.txt <- 'http://support.url.com'
+fastlane/metadata_dir_app1/ja/name.txt <- 'Japanese App Name'
+fastlane/metadata_dir_app1/ja/marketing_url.txt <- 'http://ja.url.com'
+fastlane/metadata_dir_app1/ja/support_url.txt <- 'http://support.url.com'
 '''
 
 import yaml, os, codecs
