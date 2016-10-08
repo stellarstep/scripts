@@ -1,0 +1,3 @@
+#!/bin/bash
+# gifv <depth> <src dir> <dest dir>
+mkdir -p $3 && find $2 -maxdepth $1 -type f -iname '*.gif' | while read FILE; do FILENAME=$(basename ${FILE%.*}); ffmpeg -y -i "$FILE" $3/$FILENAME.mp4 &>/dev/null; done;
