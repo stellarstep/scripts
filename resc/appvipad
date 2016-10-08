@@ -1,0 +1,3 @@
+#!/bin/bash
+# iphone app preview -> ipad app preview (AspectFit)
+ffmpeg -i $(pwd)/$1 -acodec copy -crf 12 -vf "scale=-1:1200, pad=900:1200:112:0:black" $(pwd)/$2
