@@ -1,3 +1,2 @@
 #!/bin/bash
-# gifv <depth> <src dir> <dest dir>
-mkdir -p $3; find $2 -maxdepth $1 -type f -iname '*.gif' | while read FILE; do FILENAME=$(basename ${FILE%.*}); ffmpeg -i $2/$FILENAME.gif -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2/trunc(ih/2)*2" $3/$FILENAME.mp4 -y; echo $3/$FILENAME.mp4; done;
+$(dirname $0)/aiv gif $1 "$2" "$3" 5 5
