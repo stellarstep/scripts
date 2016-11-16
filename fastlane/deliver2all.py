@@ -379,7 +379,13 @@ if __l10n__:
 
 			df = os.path.join(__l10n__, os.path.basename(d), _f)
 			# default from 'Base'
-			new_marketing_title = ('name' in matched_data and matched_data['name']) or ('name' in __targetdata_base__ and __targetdata_base__['name'])
+			new_marketing_title = None
+			if 'name' in matched_data:
+				new_marketing_title = matched_data['name']
+			elif 'name' in __targetdata_base__:
+				new_marketing_title = __targetdata_base__['name']
+			elif 'name' in string_targetdata['en-US']:
+				new_marketing_title = string_targetdata['en-US']['name']
 
 			if new_marketing_title:
 				data_lines=[]
@@ -397,3 +403,5 @@ if __l10n__:
 				wf = codecs.open(df, 'w','utf-8')
 				wf.writelines(data_lines)
 				wf.close()
+			else:
+				print '[!] Warning. Not found title for', langcode
