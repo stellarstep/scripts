@@ -29,7 +29,7 @@ args = parser.parse_args()
 __force__= args.force is not None
 __project__ = os.getcwd()
 __dirpath__ = os.path.join(__project__, expanduser(args.fastlane))
-
+__target_bundle__=args.bundle
 # python ~/Documents/scripts/fastlane/deliver2all.py com.stells.giff fastlane '~/Documents/giffwww'  -s '~/Documents/giff-resources/appstore/screenshots/giff' -ps '~/Documents/aniart-presskit/screenshots' -l 'giff/res/l10n'
 __www__=expanduser(args.jekyll)
 __screenshots__=expanduser(args.screenshots[0]) if args.screenshots is not None else None
@@ -46,12 +46,12 @@ __replace_targets__=[(u'\u2022', '-'),('+', '-')]
 __data_file__=os.path.join(__project__,args.fastlane,'metadata.yml')
 __data__=yaml.safe_load(open(__data_file__))
 __default_target_key__='default_target'
-__default_target_bundleid___=__data__[__default_target_key__]
+__default_target_bundle___=__data__[__default_target_key__]
 __global_notices_key__='global_notices'
 __local_notices_key__="notices"
 __prefix_ignore_after_lines__='Highlights of the previous update'
 
-__targetdata__ = __data__[args.bundle]
+__targetdata__ = __data__[__target_bundle__]
 __targetdata_base__ = __targetdata__['Base'] if 'Base' in __targetdata__ else None
 __version__=__targetdata__['version']
 
@@ -145,8 +145,8 @@ def get_global_notice_data():
 	return __data__[__global_notices_key__] if __global_notices_key__ in __data__ else None
 
 #site data
-def deploy_to_www_site_data():
-	datas_default = get_target_data(__default_target_bundleid___)
+def deploy_to_www_site_data(bundle):
+	datas_default = get_target_data(bundle)
 	data_file_path = os.path.join(__www__,'_data')
 	for www_data_file in [f for d, a, f in os.walk(data_file_path)][0]:
 		if www_data_file.startswith('.') or not os.path.isfile(os.path.join(data_file_path, www_data_file)):
@@ -179,9 +179,10 @@ def deploy_to_www_site_data():
 	Site data
 '''
 # site data -> _data/{lang}.yml
-print '[Site Data]'
-if __default_target_bundleid___ == args.bundle:
-	deploy_to_www_site_data()
+print '[Site Data]', __default_target_bundle___, __target_bundle__
+if __default_target_bundle___ == __target_bundle__:
+	deploy_to_www_site_data(__target_bundle__)
+
 
 
 '''
@@ -293,7 +294,7 @@ for dir, a, files in os.walk(__dirpath__):
 
 		print of.name
 
-	if target == args.bundle:
+	if target == __target_bundle__:
 		# release note
 		if __note_file__ in files:
 			__deploy_release_notes()
@@ -340,7 +341,7 @@ else:
 	PressKit
 '''
 # screenshots -> {project}-presskit/screenshots_appstore/*
-if __screenshots__ and args.bundle == __default_target_bundleid___:
+if __screenshots__ and __target_bundle__ == __default_target_bundle___:
 	print '[PressKit]'
 	for d, a, f in os.walk(__screenshots__):
 		for _f in filter(lambda n: 'Screenshot-750x1334.png' in n, f):
@@ -355,7 +356,7 @@ if __screenshots__ and args.bundle == __default_target_bundleid___:
 '''
 if __l10n__:
 	print '[.strings]',__l10n__
-	string_targetdata = get_target_data(__default_target_bundleid___)
+	string_targetdata = get_target_data(__default_target_bundle___)
 	__marketing_title_prefix__='"STAppMarketingTitle"'
 	for d, a, f in os.walk(__l10n__):
 		for _f in filter(lambda n: 'InfoPlist.strings' in n, f):
