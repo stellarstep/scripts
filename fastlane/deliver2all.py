@@ -64,6 +64,9 @@ def get_www_lang(lang):
 		if el in lang: return (el, elpath)
 	return None
 
+def get_www_langs_from_targetdata():
+	return filter(lambda lang: get_www_lang(lang) is not None, __targetdata__)
+
 def file_dir(file_path):
 	_dir = os.path.dirname(file_path)
 	if not os.path.exists(_dir):
@@ -155,6 +158,7 @@ def deploy_to_www_site_data(bundle):
 		data_file_lang = os.path.splitext(www_data_file)[0]
 	 	data_of_file_lang = (filter(lambda lang: data_file_lang in lang, datas_default) or ['Base'])[0]
 		data_titie = 'Untitled'
+		#set default
 		if 'name' in datas_default[data_of_file_lang]:
 			data_titie = datas_default[data_of_file_lang]['name']
 		elif 'name' in datas_default['Base']:
@@ -241,6 +245,16 @@ for dir, a, files in os.walk(__dirpath__):
 	#notice
 	global_notice_data = get_global_notice_data()
 	has_global_notice = global_notice_data is not None and data_lang in global_notice_data
+
+	#set lang with default lang if possible
+	if not has_global_notice:
+		if 'Base' in global_notice_data:
+			data_lang = 'Base'
+			has_global_notice = True
+		elif 'en-US' in global_notice_data:
+			data_lang = 'en-US'
+			has_global_notice = True
+
 	def __deploy_notices(notice_src_file_exists):
 		local_notice_file = find_post_file_by_target(target, get_post_file(['Notice', lang]))
 
@@ -265,10 +279,10 @@ for dir, a, files in os.walk(__dirpath__):
 #			content, mdate = get_content_for_markdown_of_file(__notice_src_file__)
 
 		#else, stop.
-		if not content:
-			if local_notice_file:
-				os.remove(local_notice_file)
-			return
+		# if not content:
+		# 	if local_notice_file:
+		# 		os.remove(local_notice_file)
+		# 	return
 
 		#post
 #		if local_notice_file:
@@ -306,12 +320,10 @@ for dir, a, files in os.walk(__dirpath__):
 	Global Notices
 '''
 print '[Global Notices]'
-
 global_notice_data = get_global_notice_data()
 if global_notice_data:
-	for lang in global_notice_data:
-
-		c = global_notice_data[lang]
+	for lang in get_www_langs_from_targetdata():
+		c = global_notice_data[lang if lang in global_notice_data else 'en-US']
 		l,lp = get_www_lang(lang)
 		nf = get_post_file([get_mdate_from_file(__data_file__), 'Notice', l])
 		f = find_post_file(nf)
@@ -326,7 +338,7 @@ if global_notice_data:
 		ff = open_file(get_post_file_abs_path(nf))
 		ff.write(c)
 		ff.close()
-		print ff.name, ' < ' ,f, c
+		print ff.name, ' < ' ,f
 
 else:
 	basepath = get_post_file_abs_path('')
