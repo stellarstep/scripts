@@ -244,18 +244,19 @@ for dir, a, files in os.walk(__dirpath__):
 
 	#notice
 	global_notice_data = get_global_notice_data()
-	has_global_notice = global_notice_data is not None and data_lang in global_notice_data
-
-	#set lang with default lang if possible
-	if not has_global_notice:
-		if 'Base' in global_notice_data:
-			data_lang = 'Base'
-			has_global_notice = True
-		elif 'en-US' in global_notice_data:
-			data_lang = 'en-US'
-			has_global_notice = True
 
 	def __deploy_notices(notice_src_file_exists):
+		#set lang with default lang if possible
+		has_global_notice = global_notice_data is not None and data_lang in global_notice_data
+		notice_data_lang = data_lang
+		if not has_global_notice:
+			if 'Base' in global_notice_data:
+				notice_data_lang = 'Base'
+				has_global_notice = True
+			elif 'en-US' in global_notice_data:
+				notice_data_lang = 'en-US'
+				has_global_notice = True
+
 		local_notice_file = find_post_file_by_target(target, get_post_file(['Notice', lang]))
 
 		def __get_notice_filepath(_mdate):
@@ -268,11 +269,11 @@ for dir, a, files in os.walk(__dirpath__):
 		content, mdate = None, None
 
 		# primary : content from overriden metadata
-		content, mdate = get_value_from_target_data(data_lang, __local_notices_key__), get_mdate_from_file(__data_file__)
+		content, mdate = get_value_from_target_data(notice_data_lang, __local_notices_key__), get_mdate_from_file(__data_file__)
 
 		# fallback : content from global notice data if exist
 		if not content and has_global_notice:
-			content, mdate = global_notice_data[data_lang], get_mdate_from_file(__data_file__)
+			content, mdate = global_notice_data[notice_data_lang], get_mdate_from_file(__data_file__)
 
 		# fallback : content from original deliver metadata if not exist in metadata.yml.
 #		if not content and notice_src_file_exists:
