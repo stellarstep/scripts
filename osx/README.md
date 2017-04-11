@@ -1,10 +1,16 @@
 # clean_itunes
-- v1.0
-- Requirements: Yosemite(for use JXA)
 
+Clean broken or dead itunes tracks perfectly.
 
-Clean your broken or dead tracks perfectly.
+# simid
+Print currently booted iOS simulator.
+
+# simcln
+Clean old xcode simulators
+
+# ignore_bluetooth_devices
+Ignore all the unaccepted bluetooth devices excluding offered MAC IDs.
 
 ```
-$ clean_itunes
+$ ignore_bluetooth_devices MAC-ADD-RESS-1 MAC-ADD-RESS-2 MAC-ADD-RESS-N
 ```
