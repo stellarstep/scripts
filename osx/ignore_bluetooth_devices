@@ -24,4 +24,6 @@ if __name__ == "__main__":
     biplist.writePlist(root, "/Library/Preferences/com.apple.Bluetooth.plist")
 
     for igd in root['IgnoredDevices']:
-        print "Ignored \"",root["DeviceCache"][igd]['Name'],"\"", igd
+        deviceitem = root["DeviceCache"][igd]
+        devicename = deviceitem['Name'] if 'Name' in deviceitem else 'Unnamed'
+        print "Ignored \"",devicename,"\"", igd
