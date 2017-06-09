@@ -44,6 +44,8 @@ for dir, a, files in os.walk(__dirpath__):
 			#remove markdown link tags
 			for m in re.finditer(mdpatterns.LINK_RE, value, re.S):
 				value = value.replace(m.group(0), m.group(1))
+			#remove html tags blocks
+			value = re.sub('<[^<]+?>', '', value)
 			#base
 			p = os.path.join(__dirpath__, args.bundle, l, key+'.txt')
 			f = codecs.open(p, 'w', 'utf-8')
