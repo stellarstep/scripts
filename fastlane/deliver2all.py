@@ -84,7 +84,9 @@ def copy_file(src_file, dest_file):
 '''
 #common
 def is_ascii(s):
-	return all(ord(c) < 128 for c in s)
+	if s:
+		return all(ord(c) < 128 for c in s)
+	return False
 
 def get_mdate_from_file(file_path):
 	mtime = os.path.getmtime(file_path)
@@ -95,10 +97,10 @@ def get_current_date_stamp():
 	return datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
 
 def get_content_for_markdown(content_str):
-	if not is_ascii(content_str):
-		content_str = content_str.encode('utf8')
-
-	content_str = content_str.decode('utf8')
+	if content_str:
+		if not is_ascii(content_str):
+			content_str = content_str.encode('utf8')
+		content_str = content_str.decode('utf8')
 
 	#replace chars
 	for s, r in __replace_targets__:
@@ -211,7 +213,10 @@ for dir, a, files in os.walk(__dirpath__):
 		if not __force__ and existed_file:
 			return
 		#content from overriden metadata
-		content, mdate = get_content_for_markdown(get_value_from_target_data(data_lang, 'release_notes')), get_mdate_from_file(os.path.join(dir, __note_file__))
+		val_content = get_value_from_target_data(data_lang, 'release_notes')
+		if not val_content:
+			return
+		content, mdate = get_content_for_markdown(val_content), get_mdate_from_file(os.path.join(dir, __note_file__))
 		#content from original deliver metadata
 		if not content:
 			content, mdate = get_content_for_markdown_of_file(__note_file__)
