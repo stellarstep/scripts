@@ -408,6 +408,24 @@ if __l10n__:
 			elif 'name' in string_targetdata['en-US']:
 				new_marketing_title = string_targetdata['en-US']['name']
 
+			new_marketing_subtitle = None
+			if 'subtitle' in matched_data:
+				new_marketing_subtitle = matched_data['subtitle']
+			elif 'subtitle' in __targetdata_base__:
+				new_marketing_subtitle = __targetdata_base__['subtitle']
+			elif 'subtitle' in string_targetdata['en-US']:
+				new_marketing_subtitle = string_targetdata['en-US']['subtitle']
+
+			__subtitle_splitter__ = ' - '
+			new_marketing_subtitle = new_marketing_subtitle.strip()
+			if len(new_marketing_subtitle) and __subtitle_splitter__ not in new_marketing_title:
+				new_marketing_title = '{}{}{}'.format(new_marketing_title.strip(), __subtitle_splitter__, new_marketing_subtitle)
+
+			# new_marketing_subtitle ==
+			# (name: Title - subtitleA) + (subtitle: '') => 'Title - subtitleA'
+			# (name: Title - subtitleA) + (subtitle: subtitleB) => 'Title - subtitleA'
+			# (name: Title) + (subtitle: subtitleB) => 'Title - subtitleB'
+
 			if new_marketing_title:
 				data_lines=[]
 				#read
