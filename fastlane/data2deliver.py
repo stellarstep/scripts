@@ -55,16 +55,21 @@ for dir, a, files in os.walk(__dirpath__):
 
 #write deliver file
 deliver_file_lines = ''
+taphead = None
 current_lines_app_target_id = None
 for line in codecs.open(__deliver_file__,'r','utf-8').readlines():
 	if 'app_identifier' in line:
+		taphead = line.split('app_identifier')[0]
 		current_lines_app_target_id = line.split('app_identifier')[1].strip().replace('"','')
-
-	if 'app_version' in line:
-		assert current_lines_app_target_id is not None, 'app_identifier not found. "app_identifier" must be available before "app_version" line'
+		assert current_lines_app_target_id is not None, 'app_identifier not found. "app_identifier" must be available at first line of each bundle ids'
+		deliver_file_lines += line
 		if current_lines_app_target_id == args.bundle:
-			sp = line.split('app_version')
-			deliver_file_lines += ''.join([sp[0], 'app_version', ' ','"', __data__[current_lines_app_target_id]['version'],'"','\n'])
+			deliver_file_lines += ''.join([taphead, 'app_version', ' ','"', __data__[current_lines_app_target_id]['version'],'"','\n'])
+		continue
+
+	if current_lines_app_target_id == args.bundle:
+		if not 'app_version' in line:
+			deliver_file_lines += line
 	else:
 		deliver_file_lines += line
 

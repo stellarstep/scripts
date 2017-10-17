@@ -392,6 +392,9 @@ if __l10n__:
 				if _zh_matched_lang and _zh_matched_lang in string_targetdata:
 					matched_lang = _zh_matched_lang
 
+			if lang == 'en':
+				matched_lang = 'en-US'
+
 			#get data
 			matched_data = string_targetdata[matched_lang]
 
