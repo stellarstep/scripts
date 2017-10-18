@@ -55,6 +55,9 @@ __targetdata__ = __data__[__target_bundle__]
 __targetdata_base__ = __targetdata__['Base'] if 'Base' in __targetdata__ else None
 __version__=__targetdata__['version']
 
+#contents
+__subtitle_splitter__ = ' - '
+
 def get_target_data(bundle_id):
 	return __data__[bundle_id]
 
@@ -165,6 +168,16 @@ def deploy_to_www_site_data(bundle):
 			data_titie = datas_default[data_of_file_lang]['name']
 		elif 'name' in datas_default['Base']:
 			data_titie = datas_default['Base']['name']
+
+		data_subtitle = ''
+		if 'subtitle' in datas_default[data_of_file_lang]:
+			data_subtitle = datas_default[data_of_file_lang]['subtitle']
+		elif 'subtitle' in datas_default['Base']:
+			data_subtitle = datas_default['Base']['subtitle']
+			
+		if data_subtitle and __subtitle_splitter__ not in data_titie:
+			data_titie = '{}{}{}'.format(data_titie.strip(), __subtitle_splitter__, data_subtitle)
+
 		data_lines=[]
 		#read
 		rf = codecs.open(os.path.join(data_file_path, www_data_file), 'r','utf-8')
@@ -408,7 +421,7 @@ if __l10n__:
 			elif 'name' in string_targetdata['en-US']:
 				new_marketing_title = string_targetdata['en-US']['name']
 
-			new_marketing_subtitle = None
+			new_marketing_subtitle = ''
 			if 'subtitle' in matched_data:
 				new_marketing_subtitle = matched_data['subtitle']
 			elif 'subtitle' in __targetdata_base__:
@@ -416,9 +429,8 @@ if __l10n__:
 			elif 'subtitle' in string_targetdata['en-US']:
 				new_marketing_subtitle = string_targetdata['en-US']['subtitle']
 
-			__subtitle_splitter__ = ' - '
 			new_marketing_subtitle = new_marketing_subtitle.strip()
-			if len(new_marketing_subtitle) and __subtitle_splitter__ not in new_marketing_title:
+			if new_marketing_subtitle and __subtitle_splitter__ not in new_marketing_title:
 				new_marketing_title = '{}{}{}'.format(new_marketing_title.strip(), __subtitle_splitter__, new_marketing_subtitle)
 
 			# new_marketing_subtitle ==
