@@ -63,9 +63,9 @@ for line in codecs.open(__deliver_file__,'r','utf-8').readlines():
 		current_lines_app_target_id = line.split('app_identifier')[1].strip().replace('"','')
 		assert current_lines_app_target_id is not None, 'app_identifier not found. "app_identifier" must be available at first line of each bundle ids'
 		deliver_file_lines += line
-		if current_lines_app_target_id == args.bundle:
-			deliver_file_lines += ''.join([taphead, 'app_version', ' ','"', __data__[current_lines_app_target_id]['version'],'"','\n'])
-		continue
+		# if current_lines_app_target_id == args.bundle:
+		# 	deliver_file_lines += ''.join([taphead, 'app_version', ' ','"', __data__[current_lines_app_target_id]['version'],'"','\n'])
+		# continue
 
 	if current_lines_app_target_id == args.bundle:
 		if not 'app_version' in line:
