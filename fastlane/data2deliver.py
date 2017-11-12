@@ -65,7 +65,7 @@ for line in codecs.open(__deliver_file__,'r','utf-8').readlines():
 		deliver_file_lines += line
 		# if current_lines_app_target_id == args.bundle:
 		# 	deliver_file_lines += ''.join([taphead, 'app_version', ' ','"', __data__[current_lines_app_target_id]['version'],'"','\n'])
-		# continue
+		continue
 
 	if current_lines_app_target_id == args.bundle:
 		if not 'app_version' in line:
