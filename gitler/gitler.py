@@ -19,7 +19,7 @@ def main():
     perform_stash = args['stash'] is not False
     performed_stash = False
     if perform_stash:
-        performed_stash = subprocess.call('git stash', shell=True)==0
+        performed_stash = subprocess.call('git stash --include-untracked', shell=True)==0
 
     print '> Configure git ...'
     resolve_global()
