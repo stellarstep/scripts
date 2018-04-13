@@ -1,7 +1,5 @@
 <img src="https://raw.githubusercontent.com/metasmile/git-subfile/master/icon.png?v=1" width="50%">
 
-[![Tasks in Ready](https://badge.waffle.io/metasmile/git-subfile.svg?label=ready&title=Tasks in Ready)](http://waffle.io/metasmile/git-subfile)
-
 git-subfile is safe, fast and strong way to work with sub repositories. This git extension finally will synchronize and automatically resolve git working between specific path in main repo and other repositories.
 
 ``
