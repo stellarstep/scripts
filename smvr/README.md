@@ -3,7 +3,7 @@ CLI utils for semantic versioning
 
 
 ## smvr-len
-Print distance between two given version strings.
+Print minimum distance between two given version strings.
 ```
 $ python smvr-len.py 1.1.21 1.2.14
 15
