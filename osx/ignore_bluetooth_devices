@@ -1,0 +1,29 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import sys
+__REQUIRED_PACKAGES__ = ["biplist"]
+
+def install_and_import(package):
+    import importlib
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        import pip
+        pip.main(['install', package])
+    finally:
+        globals()[package] = importlib.import_module(package)
+
+if __name__ == "__main__":
+    for P in __REQUIRED_PACKAGES__:
+        install_and_import(P)
+
+    __my_devices__ = sys.argv[1:]
+    root = biplist.readPlist("/Library/Preferences/com.apple.Bluetooth.plist")
+    root['IgnoredDevices'] = [k for k in root["DeviceCache"].keys() if k not in __my_devices__]
+    biplist.writePlist(root, "/Library/Preferences/com.apple.Bluetooth.plist")
+
+    for igd in root['IgnoredDevices']:
+        deviceitem = root["DeviceCache"][igd]
+        devicename = deviceitem['Name'] if 'Name' in deviceitem else 'Unnamed'
+        print "Ignored \"",devicename,"\"", igd

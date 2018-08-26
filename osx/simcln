@@ -1,0 +1,65 @@
+#!/usr/bin/ruby
+
+require 'fileutils'
+require 'optparse'
+
+options = {:verbose => false}
+OptionParser.new do |opts|
+  opts.banner = "Usage: clean-old-sims.rb [options]\nLists old devices, deletes if -d is specified"
+
+  opts.on("-d", "--delete", "Delete old simulator devices") do |d|
+    options[:delete] = d
+  end
+  opts.on("-v", "--verbose", "Enable more logging") do |v|
+  	options[:verbose] = v
+  end
+end.parse!
+
+def getValidRuntimes
+	xcodes = %x{mdfind -onlyin / 'kMDItemCFBundleIdentifier = com.apple.dt.Xcode'}.split("\n")
+	validRuntimes = []
+	xcodes.each do |xcode|
+		simctl = "env DEVELOPER_DIR=\"#{xcode}\" xcrun simctl"
+		activeSims = %x{#{simctl} list runtimes}
+		for line in activeSims.split("\n")
+			m = /(com.apple.CoreSimulator.SimRuntime.iOS-\d+-\d+)/m.match(line)
+			if m and not validRuntimes.include? m[1]
+				validRuntimes << m[1]
+			end
+		end
+	end
+	return validRuntimes
+end
+
+def getDeviceInfo(devicePath, key)
+	return %x{/usr/libexec/PlistBuddy -c "Print :#{key}" #{devicePath}/device.plist}.strip
+end
+
+validRuntimes = getValidRuntimes()
+
+if options[:verbose]
+	puts "Valid runtimes:"
+	puts validRuntimes
+end
+
+# find all on-disk devices, compare against Xcode's list
+for deviceFolder in Dir.glob(File.join(Dir.home, "/Library/Developer/CoreSimulator/Devices/*"))
+	deviceID = File.basename(deviceFolder)
+    if deviceID == 'device_set.plist'
+        next
+    end
+	isValid = false
+	name = getDeviceInfo(deviceFolder, 'name')
+	runtime = getDeviceInfo(deviceFolder, 'runtime')
+	if not validRuntimes.include? runtime
+		if options[:delete]
+			# FileUtils.remove_entry_secure(deviceFolder)
+			%x{xcrun simctl delete #{deviceID}}
+			if options[:verbose]
+				puts "#{name} (#{runtime}, #{deviceID}) was deleted"
+			end
+		else
+			puts "#{name} (#{runtime}, #{deviceID}) is missing runtime"
+		end
+	end
+end

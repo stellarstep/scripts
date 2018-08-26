@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "$(xcrun simctl list | grep 'Booted' | awk '{print $4}' | sed 's/[\s()]//g')"
+
+#alias simdir='cd ~/Library/Developer/CoreSimulator/Devices/"$(~/Documents/scripts/osx/cur_simulator)"'

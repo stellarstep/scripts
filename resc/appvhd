@@ -1,0 +1,2 @@
+#!/bin/bash
+$(dirname $0)/appv "$1" "$2" 1080 1920
