@@ -1,3 +1,22 @@
-# scripts
+# apngen
+Generate all png frames to APNGs.
 
-Utilities which mainly focused on various handling for resources.
+## Format for Source Dir
+```
+{ProjectName}_src
+    {name}_{frame interval}
+        {frame index (0~n)}.png
+```
+
+## Usage
+
+```
+{ProjectName}_src$ python apngen.py
+```
+
+## Result
+
+```
+{ProjectName}_src/../{ProjectName}
+    {name}.png
+```

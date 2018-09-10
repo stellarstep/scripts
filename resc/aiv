@@ -1,3 +1,0 @@
-#!/bin/bash
-# aiv <extention(ex:gif)> <depth for finding path> <src dir> <dest dir> <loop> <fps>
-mkdir -p $4; find $3 -maxdepth $2 -type f -iname "*.$1" | while read FILE; do FILENAME=$(basename ${FILE%.*}); ffmpeg -stream_loop $5 -r $6 -i $3/$FILENAME.$1 -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" $4/$FILENAME.mp4 -y; echo $4/$FILENAME.mp4; done;

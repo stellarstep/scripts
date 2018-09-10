@@ -1,2 +1,0 @@
-#!/bin/bash
-$(dirname $0)/appva "$1" "$2" 1080 1920
